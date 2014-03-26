@@ -48,7 +48,8 @@
         (inc (:pc frame)))
   :stack (pop (:stack frame)))
 
-(defop halt [inst frame])
+(defop halt [inst frame]
+  :pc (:pc frame))
 
 (defn eval-op [inst env]
   (cond

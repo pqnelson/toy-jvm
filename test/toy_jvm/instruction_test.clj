@@ -61,3 +61,13 @@
                             :locals {}
                             :stack []
                             :program '((ifeq 88))}))))
+(deftest halt-test
+  (is (= (eval-halt '(halt)
+                    {:pc 423
+                     :locals {}
+                     :stack []
+                     :program []})
+         (frame/map->Frame {:pc 423
+                            :locals {}
+                            :stack []
+                            :program []}))))
