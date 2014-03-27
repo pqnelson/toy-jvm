@@ -62,3 +62,4 @@
    (goto? (op-code inst)) (eval-goto inst env)
    (ifeq? (op-code inst)) (eval-ifeq inst env)
    :else (eval-halt inst env)))
+   :else          (throw (Exception. (str "Unknown opcode " (op-code inst))))))

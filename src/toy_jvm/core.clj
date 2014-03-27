@@ -8,11 +8,13 @@
   (eval-op (frame/next-inst frame) frame))
 
 (defn run [frame n]
-  (loop [state frame
-         k n]
-    (if-not (pos? k)
-      state
-      (recur (step state) (dec k)))))
+  (try
+    (loop [state frame
+           k n]
+      (if-not (pos? k)
+        state
+        (recur (step state) (dec k))))
+    (catch Exception e (println "Exception: " (.getMessage e)))))
 
 (util/defcode *pi*
   ((iconst 0)   ;  0
