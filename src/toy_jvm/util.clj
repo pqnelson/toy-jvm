@@ -27,3 +27,10 @@
 (defn pop [stack]
   (when (seq stack)
     (rest stack)))
+
+(defmacro raw-code [& code]
+  `(quote ~code))
+
+(defmacro defcode [id code] 
+  `(def ~id 
+     (quote ~code)))
