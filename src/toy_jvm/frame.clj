@@ -5,15 +5,24 @@
 
 (defrecord Frame [pc locals stack program])
 
-(defn modify [frame & {:as args}]
+(defn update-frame [frame updates]
   (when *trace*
-    (println (or (:pc args) (:pc frame))) (flush))
-  (map->Frame (merge frame
-                     {:pc (inc (:pc frame))}
-                     args)))
+    (println (:pc frame)) (flush))
+  (map->Frame (merge frame {:pc (inc (:pc frame))} updates)))
+
+(defn- no-changes? [args]
+  (or (empty? args)
+      (not args)
+      (and (= 1 (count args))
+           (contains? #{nil 'pass} (first args)))))
+
+(defn modify [frame & {:as args}]
+  (if (no-changes? args)
+    frame
+    (update-frame frame args)))
 
 (defn local-value [frame id]
-  (get (:locals frame) id))
+  (get-in frame [:locals id]))
 
 (defn next-inst [frame]
   (nth (:program frame) (:pc frame)))
