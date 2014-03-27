@@ -9,7 +9,7 @@
      (defn ~(symbol (str 'eval- name)) [~@args]
        (frame/modify ~(last args) ~@changes))
      (defn ~(symbol (str name "?")) [op-code#]
-       (= (symbol (string/lower-case (str op-code#)))
+       (= (symbol (string/lower-case (str (if (coll? op-code#) (first op-code#) op-code#))))
           (symbol name#)))))
 
 (defop iload [inst frame]
@@ -48,18 +48,17 @@
         (inc (:pc frame)))
   :stack (pop (:stack frame)))
 
-(defop halt [inst frame]
-  :pc (:pc frame))
+(defop halt [inst frame])
 
 (defn eval-op [inst env]
   (cond
-   (iload? (op-code inst)) (eval-iload inst env)
-   (iconst? (op-code inst)) (eval-iconst inst env)
-   (iadd? (op-code inst)) (eval-iadd inst env)
-   (isub? (op-code inst)) (eval-isub inst env)
-   (imul? (op-code inst)) (eval-imul inst env)
-   (istore? (op-code inst)) (eval-istore inst env)
-   (goto? (op-code inst)) (eval-goto inst env)
-   (ifeq? (op-code inst)) (eval-ifeq inst env)
-   :else (eval-halt inst env)))
+   (iload? inst)  (eval-iload inst env)
+   (iconst? inst) (eval-iconst inst env)
+   (iadd? inst)   (eval-iadd inst env)
+   (isub? inst)   (eval-isub inst env)
+   (imul? inst)   (eval-imul inst env)
+   (istore? inst) (eval-istore inst env)
+   (goto? inst)   (eval-goto inst env)
+   (ifeq? inst)   (eval-ifeq inst env)
+   (halt? inst)   (eval-halt inst env)
    :else          (throw (Exception. (str "Unknown opcode " (op-code inst))))))
