@@ -19,7 +19,7 @@
 
 ;; stack related code
 (defn push [obj stack]
-  (cons obj stack))
+  (into [obj] stack))
 
 (defn top [stack]
   (first stack))
